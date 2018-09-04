@@ -1,4 +1,3 @@
-ERES GAY
 ---
 - name: Deploy de Fuse y tres nodos
 - hosts: localhost
