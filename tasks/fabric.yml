@@ -1,0 +1,16 @@
+---
+#- hosts: localhost
+#  tasks:
+  - name: Se enciende servicio
+    command: sh /opt/jboss-fuse-6.2.1.redhat-159/bin/start
+    register: fuse encendido
+  - name: fuse encendido
+    debug:
+      msg: 'se enciende servicio en el nodo: {{ ansible_hostname }}'
+  - name: Se genera fabrica
+    command: sh /opt/jboss-fuse-6.2.1.redhat-159/bin/encendido.sh
+    register: fabrica
+  - name: fabrica
+    debug:
+      msg: 'se visualizan estos servicios {{ fabrica.stdout}}'
+

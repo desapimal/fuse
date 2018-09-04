@@ -1,0 +1,44 @@
+---
+- name: Deploy de Fuse y tres nodos
+- hosts: localhost
+  tasks:
+  - name: Copiar archivo apache zip a servidor
+    copy: 
+      src: apache-maven-3.5.4-bin.zip  
+      dest: /tmp/apache-maven-3.5.4-bin.zip
+      owner: root
+      group: root
+      mode: 0644
+  - name: Copiar archivo de Fuse a servidor
+    copy: 
+      src: jboss-fuse-full-6.2.1.redhat-159.zip  
+      dest: /tmp/jboss-fuse-full-6.2.1.redhat-159.zip
+      owner: root
+      group: root
+      mode: 0644
+  - name: Copiar archivo de JDK a servidor
+    copy: 
+      src: jdk-8u181-linux-x64.tar.gz
+      dest: /tmp/jdk-8u181-linux-x64.tar.gz
+      owner: root
+      group: root
+      mode: 0644
+  - name: Enviar fuse a /opt
+    unarchive:
+      src: /tmp/jboss-fuse-full-6.2.1.redhat-159.zip
+      dest: /opt/jboss-fuse-full-6.2.1.redhat-159.zip
+      remote_src: yes
+  - name: Editar hosts
+    lineinfile:
+      path: /etc/hosts  
+      line: '{{ ansible_ens33.ipv4.address }} {{ ansible_hostname }}'
+  - name: Cambiar nombre de instancia root a root1
+    lineinfile:
+      path: /opt/jboss-fuse-6.2.1.redhat-159/etc/system.properties
+      regexp: '^karaf.name'
+      line: 'karaf.name = root1'                          
+  - name: Agregar credenciales a Fuse
+    lineinfile:
+      path: /opt/jboss-fuse-6.2.1.redhat-159/etc/user.properties
+      insertafter: '^#admin=admin'
+      line: 'amin=admin,admin,manager,viewer,Monitor, Operator, Maintainer, Deployer, Auditor, Administrator, SuperUser'  
